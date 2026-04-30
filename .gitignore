@@ -21,3 +21,4 @@ iosApp/iosApp.xcodeproj/*
 *.pem
 *.env
 .env.*
+CodeQuest_Project_Report.md
