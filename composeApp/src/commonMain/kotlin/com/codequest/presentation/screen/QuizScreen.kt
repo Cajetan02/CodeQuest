@@ -230,6 +230,7 @@ fun QuizScreen(
                             streak = 0
                             hearts--
                         }
+                        viewModel.onAnswerSubmitted(isCorrect)
                     },
                     onContinue = {
                         if (isCorrect) {

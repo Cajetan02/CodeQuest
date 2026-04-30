@@ -10,8 +10,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.datetime.Clock
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.coroutines.flow.firstOrNull
+
+private val json = Json { ignoreUnknownKeys = true }
 
 class UserStatsRepositoryImpl(
     private val supabaseClient: SupabaseClient,
@@ -28,12 +31,16 @@ class UserStatsRepositoryImpl(
             val stats = supabaseClient.postgrest["user_stats"].select {
                 filter { eq("uid", userId) }
             }.decodeSingle<UserStats>()
-            dataStoreManager.saveCachedStats(Json.encodeToString(stats))
+            dataStoreManager.saveCachedStats(json.encodeToString(stats))
             Result.success(stats)
         } catch (e: Exception) {
             val cached = dataStoreManager.getCachedStats().firstOrNull()
             if (cached != null) {
-                Result.success(Json.decodeFromString(cached))
+                try {
+                    Result.success(json.decodeFromString(cached))
+                } catch (e2: Exception) {
+                    Result.failure(e)
+                }
             } else {
                 Result.failure(e)
             }

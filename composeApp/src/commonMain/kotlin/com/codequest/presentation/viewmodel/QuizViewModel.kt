@@ -21,6 +21,8 @@ class QuizViewModel(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
+    private var questionPool: List<Question> = emptyList()
+
     private val _questions = MutableStateFlow<List<Question>>(emptyList())
     val questions: StateFlow<List<Question>> = _questions
 
@@ -42,10 +44,27 @@ class QuizViewModel(
             
             val result = languageRepository.getQuestionsForLesson(lessonId)
             if (result.isSuccess) {
-                _questions.value = result.getOrThrow()
+                val allQuestions = result.getOrThrow()
+                questionPool = allQuestions
+                // Pick a subset of questions dynamically (e.g., max 5)
+                _questions.value = allQuestions.shuffled().take(5)
                 _currentQuestionIndex.value = 0
             } else {
                 _errorMessage.value = result.exceptionOrNull()?.message ?: "Failed to load questions"
+            }
+        }
+    }
+
+    fun onAnswerSubmitted(isCorrect: Boolean) {
+        if (!isCorrect) {
+            val currentIds = _questions.value.map { it.id }.toSet()
+            val available = questionPool.filter { it.id !in currentIds }
+            if (available.isNotEmpty()) {
+                val nextQ = available.random()
+                _questions.value = _questions.value + nextQ
+            } else {
+                val currentQ = _questions.value[_currentQuestionIndex.value]
+                _questions.value = _questions.value + currentQ.copy(id = currentQ.id + "_retry")
             }
         }
     }

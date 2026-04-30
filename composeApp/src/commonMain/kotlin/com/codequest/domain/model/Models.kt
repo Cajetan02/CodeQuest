@@ -16,9 +16,9 @@ data class Language(
 
 @Serializable
 enum class Difficulty {
-    @SerialName("beginner") BEGINNER,
-    @SerialName("intermediate") INTERMEDIATE,
-    @SerialName("advanced") ADVANCED
+    @SerialName("easy") BEGINNER,
+    @SerialName("medium") INTERMEDIATE,
+    @SerialName("hard") ADVANCED
 }
 
 @Serializable
@@ -28,16 +28,16 @@ data class Lesson(
     val languageId: String,
     val title: String,
     @SerialName("order_index")
-    val orderIndex: Int,
+    val orderIndex: Int = 0,
     val content: String? = null,
-    val difficulty: Difficulty? = null
+    val difficulty: String? = null
 )
 
 @Serializable
 enum class QuestionType {
-    @SerialName("MULTIPLE_CHOICE") MULTIPLE_CHOICE,
-    @SerialName("FILL_IN_BLANK") FILL_IN_BLANK,
-    @SerialName("CODE_ORDER") CODE_ORDER,
+    @SerialName("multiple_choice") MULTIPLE_CHOICE,
+    @SerialName("fill_in_blank") FILL_IN_BLANK,
+    @SerialName("code_order") CODE_ORDER,
     @SerialName("true_false") TRUE_FALSE,
     @SerialName("code_snippet") CODE_SNIPPET,
     @SerialName("matching") MATCHING,
@@ -56,7 +56,7 @@ data class Question(
     val options: List<String> = emptyList(),
     @SerialName("correct_answer_index")
     val correctAnswerIndex: Int? = null,
-    @SerialName("correct_text")
+    @SerialName("correct_answer")
     val correctText: String? = null,
     @SerialName("correct_order")
     val correctOrder: List<String>? = null,
@@ -64,7 +64,8 @@ data class Question(
     val codeSnippet: String? = null,
     val explanation: String? = null,
     @SerialName("xp_reward")
-    val xpReward: Int = 10
+    val xpReward: Int = 10,
+    val difficulty: String? = null
 )
 
 @Serializable
