@@ -1,0 +1,23 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.vscode/
+.kotlin/
+.DS_Store
+build/
+/captures
+.externalNativeBuild
+.cxx
+iosApp/iosApp.xcworkspace/*
+iosApp/iosApp.xcodeproj/*
+!iosApp/iosApp.xcodeproj/project.pbxproj
+
+# Local secret and key files
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.env
+.env.*
